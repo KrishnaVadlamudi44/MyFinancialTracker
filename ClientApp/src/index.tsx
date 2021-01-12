@@ -2,14 +2,17 @@ import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { AppContextProvider } from './Context/AppContext';
 import { muiTheme } from './MuiStyles';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={muiTheme}>
-      <App />
-    </ThemeProvider>
+    <AppContextProvider>
+      <ThemeProvider theme={muiTheme}>
+        <App />
+      </ThemeProvider>
+    </AppContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
