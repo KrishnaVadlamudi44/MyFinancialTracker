@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyFinancialTracker.Models
+namespace MyFinancialTracker.Models.ApiRequestModels
 {
-    public class RegisterModel
+    public class RegisterRequestModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

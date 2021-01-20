@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MyFinancialTracker.Data.Entities;
 using MyFinancialTracker.Models;
+using MyFinancialTracker.Models.ApiRequestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace MyFinancialTracker.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<RegisterModel, User>();
-            CreateMap<RegisterModel, UserInfo>().ForMember(dest => dest.Email, opt => opt.MapFrom(source => source.UserName));
+            CreateMap<RegisterRequestModel, User>();
+            CreateMap<RegisterRequestModel, UserInfo>().ForMember(dest => dest.Email, opt => opt.MapFrom(source => source.UserName));
         }
     }
 }

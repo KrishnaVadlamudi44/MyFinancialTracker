@@ -39,7 +39,6 @@ const Layout = () => {
           <Typography variant='h6' className={classes.title}>
             My Financial Tracker
           </Typography>
-          <Button color='inherit'>Login</Button>
         </Toolbar>
       </AppBar>
       <Hidden smDown>

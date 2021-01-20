@@ -2,6 +2,7 @@
 using MyFinancialTracker.Data;
 using MyFinancialTracker.Data.Entities;
 using MyFinancialTracker.Models;
+using MyFinancialTracker.Models.ApiRequestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace MyFinancialTracker.Services
     {
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
-        User GetById(int id);
-        Guid Create(RegisterModel user, string password);
+        User GetByGuid(string guid);
+        Guid Create(RegisterRequestModel user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
     }
@@ -27,11 +28,11 @@ namespace MyFinancialTracker.Services
             _mapper = mapper;
         }
 
-        public Guid Create(RegisterModel registerModel, string password)
+        public Guid Create(RegisterRequestModel registerModel, string password)
         {
             // map model to entity
-            var user = _mapper.Map<RegisterModel, User>(registerModel);
-            var userInfo = _mapper.Map<RegisterModel, UserInfo>(registerModel);
+            var user = _mapper.Map<RegisterRequestModel, User>(registerModel);
+            var userInfo = _mapper.Map<RegisterRequestModel, UserInfo>(registerModel);
 
             // validation
             if (string.IsNullOrWhiteSpace(password))
@@ -83,9 +84,9 @@ namespace MyFinancialTracker.Services
             return _dbContext.Users;
         }
 
-        public User GetById(int id)
+        public User GetByGuid(string guid)
         {
-            return _dbContext.Users.Find(id);
+            return _dbContext.Users.Where(x=>x.UserGuid == new Guid(guid)).FirstOrDefault();
         }
 
         public void Update(User userParam, string password = null)

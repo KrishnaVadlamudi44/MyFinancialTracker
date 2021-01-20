@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyFinancialTracker.Data.Entities;
 using MyFinancialTracker.Models;
+using MyFinancialTracker.Models.ApiRequestModels;
+using MyFinancialTracker.Models.ApiResponseModels;
 using MyFinancialTracker.Services;
 using System;
 using System.Collections.Generic;
@@ -33,13 +35,16 @@ namespace MyFinancialTracker.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterModel model)
+        public IActionResult Register([FromBody] RegisterRequestModel model)
         {
             try
             {
                 // create user
                 var createdUserGuid = _userService.Create(model, model.Password);
-                return Ok(createdUserGuid);
+                return Ok(new RegisterResponseModel()
+                {
+                    CreatedUserGuid = createdUserGuid.ToString()
+                });
             }
             catch (Exception ex)
             {
@@ -50,7 +55,7 @@ namespace MyFinancialTracker.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] AuthenticateModel model)
+        public IActionResult Authenticate([FromBody] LoginRequestModel model)
         {
             var user = _userService.Authenticate(model.UserName, model.Password);
 
@@ -65,7 +70,7 @@ namespace MyFinancialTracker.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, _appSettings.TestUserGuid)
+                    new Claim(ClaimTypes.Name, user.UserGuid.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -73,10 +78,10 @@ namespace MyFinancialTracker.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new
+            return Ok(new LoginResponseModel()
             {
-                UserGuid = _appSettings.TestUserGuid,
-                Token = tokenString
+                UserGuid = user.UserGuid.ToString(),
+                TokenString = tokenString
             });
         }
 

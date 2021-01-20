@@ -53,9 +53,9 @@ namespace MyFinancialTracker
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var userGuid = context.Principal.Identity.Name.ToString();
 
-                        var user = userService.GetById(userId);
+                        var user = userService.GetByGuid(userGuid);
                         if (user == null)
                         {
                             context.Fail("Unauthorized");
@@ -63,6 +63,7 @@ namespace MyFinancialTracker
 
                         return Task.CompletedTask;
                     }
+                    
                 };
                 x.TokenValidationParameters = new TokenValidationParameters
                 {

@@ -4,13 +4,13 @@ import { reducer } from './Reducer';
 
 export type AppContextState = {
   authenticated: boolean;
-  linkToken?: string | undefined;
+  userGuid?: string | undefined;
   sessionId?: string | undefined;
   loading: boolean;
 };
 
 const initialState: AppContextState = {
-  authenticated: false,
+  authenticated: localStorage.getItem('token') === null ? false : true,
   loading: false,
 };
 

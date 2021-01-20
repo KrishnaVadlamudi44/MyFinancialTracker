@@ -12,6 +12,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { useAppContextState } from '../../Context/AppContext';
 
 interface ILeftMainMenuProps {
   onSelect?: () => void | undefined;
@@ -21,7 +22,36 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
   const classes = useStyles();
   const history = useHistory();
   const [selected, setSelected] = useState<string>();
-  console.log(history.location);
+  const { appContextState, dispatch } = useAppContextState();
+
+  const handleClick = (item: string) => {
+    switch (item) {
+      case 'Dashboard':
+        history.push('Dashboard');
+        //forcing to re-render component so that history is updated for below "selected" property to work
+        setSelected(item);
+        break;
+      case 'Accounts':
+        history.push('Accounts');
+        setSelected(item);
+        break;
+      case 'Profile':
+        history.push('Profile');
+        setSelected(item);
+        break;
+      case 'Logout':
+        localStorage.removeItem('token');
+        dispatch({
+          type: 'updateAppState',
+          nextState: { ...appContextState, authenticated: false },
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <div className={classes.drawerContainer}>
       <List>
@@ -30,9 +60,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
             button
             key={text}
             onClick={() => {
-              history.push(text);
-              //forcing to re-render component so that history is updated for below "selected" property to work
-              setSelected(text);
+              handleClick(text);
             }}
             selected={history.location.pathname.includes(text)}
           >
@@ -51,9 +79,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
             button
             key={text}
             onClick={() => {
-              history.push(text);
-              //forcing to re-render component so that history is updated for below "selected" property to work
-              setSelected(text);
+              handleClick(text);
             }}
             selected={history.location.pathname.includes(text)}
           >
