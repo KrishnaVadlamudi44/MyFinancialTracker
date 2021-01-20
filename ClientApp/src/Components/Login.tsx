@@ -108,7 +108,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          {localState.loginOrRegister === 'login' ? 'Sign In' : 'Sign Up'}
         </Typography>
         {localState.loginOrRegister === 'register' && (
           <>
