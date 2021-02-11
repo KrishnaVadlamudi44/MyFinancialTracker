@@ -24,11 +24,13 @@ namespace MyFinancialTracker.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private ISessionService _sessionService;
         private ILogger _logger;
         private readonly AppSettings _appSettings;
-        public UsersController(IUserService userService, ILogger logger, IOptions<AppSettings> appSettings)
+        public UsersController(IUserService userService, ISessionService sessionService, ILogger logger, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _sessionService = sessionService;
             _logger = logger;
             _appSettings = appSettings.Value;
         }
@@ -78,9 +80,11 @@ namespace MyFinancialTracker.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
+            var sessionGuid = _sessionService.CreateSession(user.UserGuid);
+
             return Ok(new LoginResponseModel()
             {
-                UserGuid = user.UserGuid.ToString(),
+                SessionGuid = sessionGuid.ToString(),
                 TokenString = tokenString
             });
         }

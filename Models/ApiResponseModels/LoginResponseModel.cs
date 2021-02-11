@@ -7,7 +7,7 @@ namespace MyFinancialTracker.Models.ApiResponseModels
 {
     public class LoginResponseModel
     {
-        public string UserGuid { get; set; }
+        public string SessionGuid { get; set; }
         public string TokenString { get; set; }
     }
 }

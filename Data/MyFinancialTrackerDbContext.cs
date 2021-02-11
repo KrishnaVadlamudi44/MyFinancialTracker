@@ -31,11 +31,13 @@ namespace MyFinancialTracker.Data
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserInfoConfiguration());
             modelBuilder.ApplyConfiguration(new SessionConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemConfiguration());
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<UserInfo> UsersInfo { get; set; }
+        public DbSet<Item> Items { get; set; }
 
     }
 }

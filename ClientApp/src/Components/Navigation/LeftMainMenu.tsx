@@ -41,6 +41,8 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
         break;
       case 'Logout':
         localStorage.removeItem('token');
+        localStorage.removeItem('sessionId');
+
         dispatch({
           type: 'updateAppState',
           nextState: { ...appContextState, authenticated: false },

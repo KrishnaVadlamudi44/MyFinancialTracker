@@ -21,19 +21,16 @@ namespace MyFinancialTracker.Controllers
             _sessionService = sessionService;
         }
 
-        public IActionResult CreateSession(Session session)
-        {
-            return Ok(_sessionService.CreateSession(session));
-        }
-
+        [HttpGet("{sessionGuid}")]
         public IActionResult GetSession(Guid sessionGuid)
         {
             return Ok(_sessionService.GetSession(sessionGuid));
         }
 
-        public IActionResult UpdateSession([FromBody] Session session)
+        [HttpPut("{sessionGuid}")]
+        public IActionResult UpdateSession(string sessionGuid, [FromBody] Session session)
         {
-            _sessionService.UpdateSession(session);
+            _sessionService.UpdateSession(new Guid(sessionGuid), session);
             return Ok();
         }
     }

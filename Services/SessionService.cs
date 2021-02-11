@@ -7,11 +7,11 @@ namespace MyFinancialTracker.Services
 {
     public interface ISessionService
     {
-        Guid CreateSession(Session session);
+        Guid CreateSession(Guid userGuid);
 
-        Session GetSession(Guid userGuid);
+        Session GetSession(Guid sessionGuid);
 
-        void UpdateSession(Session session);
+        void UpdateSession(Guid sessionGuid, Session session);
     }
 
     public class SessionService : ISessionService
@@ -22,22 +22,28 @@ namespace MyFinancialTracker.Services
             _dbContext = dataContext;
         }
 
-        public Guid CreateSession(Session session)
+        public Guid CreateSession(Guid userGuid)
         {
-            _dbContext.Sessions.Add(session);
+            _dbContext.Sessions.Add(new Session()
+            {
+                UserUuid = userGuid,
+                SessionInfo = "{}",
+                Expiry = DateTime.Now.AddHours(2)
+            });
 
             _dbContext.SaveChanges();
 
-            return _dbContext.Sessions.Find(session.Id).SessionUuid;
+            var createdSession = _dbContext.Sessions.Where(x => x.UserUuid == userGuid).FirstOrDefault();
+
+            return createdSession.SessionUuid;
         }
 
-        public Session GetSession(Guid userGuid)
+        public Session GetSession(Guid sessionguid)
         {
-            return _dbContext.Sessions.Where(x => x.UserUuid == userGuid).FirstOrDefault();
-
+            return _dbContext.Sessions.Where(x => x.SessionUuid == sessionguid).FirstOrDefault();
         }
 
-        public void UpdateSession(Session session)
+        public void UpdateSession(Guid sessionGuid, Session session)
         {
             var currentSession = _dbContext.Sessions.Where(x => x.SessionUuid == session.SessionUuid).FirstOrDefault();
 

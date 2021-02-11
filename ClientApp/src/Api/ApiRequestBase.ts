@@ -5,10 +5,12 @@ export const Get = async <T>(
 ): Promise<T> => {
   try {
     let requestHeaders = getDefaultHeaders();
-    requestHeaders.append(
-      'Authorization',
-      `Bearer ${localStorage.getItem('token')}`
-    );
+
+    authorizedCall &&
+      requestHeaders.append(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token')}`
+      );
 
     endPoint = queryParameters ? `${endPoint}?${queryParameters}` : endPoint;
     const response = await fetch(endPoint, {
@@ -21,13 +23,18 @@ export const Get = async <T>(
   }
 };
 
-export const Post = async <R, T>(endPoint: string, payload: T): Promise<R> => {
+export const Post = async <R, T>(
+  endPoint: string,
+  authorizedCall: boolean = true,
+  payload: T
+): Promise<R> => {
   try {
     let requestHeaders = getDefaultHeaders();
-    requestHeaders.append(
-      'Authorization',
-      `Bearer ${localStorage.getItem('token')}`
-    );
+    authorizedCall &&
+      requestHeaders.append(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token')}`
+      );
     const response = await fetch(endPoint, {
       method: 'POST',
       headers: requestHeaders,
