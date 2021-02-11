@@ -7,6 +7,7 @@ export type AppContextState = {
   authenticated: boolean;
   userGuid?: string | undefined;
   sessionId?: string | undefined;
+  linkToken?: string | undefined;
   userAccounts?: IPlaidAccount[] | undefined;
   loading: boolean;
 };

@@ -12,6 +12,11 @@ export const reducer = (state: AppContextState, action: AppContextActions) => {
         ...state,
         loading: action.nextState,
       };
+    case 'setLinkToken':
+      return {
+        ...state,
+        linkToken: action.nextState,
+      };
     case 'updateUserAccounts':
       return {
         ...state,

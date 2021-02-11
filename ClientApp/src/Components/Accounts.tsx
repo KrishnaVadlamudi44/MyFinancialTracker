@@ -1,5 +1,4 @@
-import React, { useCallback, useState } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
+import React, { useState } from 'react';
 import { GetAccounts, GetLinkToken } from '../Api/PlaidApi';
 import { useAppContextState } from '../Context/AppContext';
 import LinkBankAccount from './LinkBankAccount';
@@ -7,11 +6,9 @@ import LinkBankAccount from './LinkBankAccount';
 const Accounts = () => {
   const { appContextState, dispatch } = useAppContextState();
 
-  const [token, setToken] = useState<string>();
-
   const createTokenAndOpenPlaid = () => {
     GetLinkToken().then((token) => {
-      setToken(token);
+      dispatch({ type: 'setLinkToken', nextState: token });
     });
   };
 
@@ -33,7 +30,9 @@ const Accounts = () => {
             </div>
           );
         })}
-      {token && <LinkBankAccount token={token} />}
+      {appContextState.linkToken && (
+        <LinkBankAccount token={appContextState.linkToken} />
+      )}
     </div>
   );
 };
