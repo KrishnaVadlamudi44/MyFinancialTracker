@@ -1,10 +1,12 @@
 import {
+  IUserItems,
   IUserLoginRequest,
   IUserLoginResponse,
   IUserRegisterRequest,
   IUserRegisterResponse,
 } from '../Models/UserModels/User';
-import { Post } from './ApiRequestBase';
+import { Get, Post } from './ApiRequestBase';
+import { GetSession } from './SessionApi';
 
 export const UserLogin = async (loginInfo: IUserLoginRequest) => {
   const resp = await Post<IUserLoginResponse, IUserLoginRequest>(
@@ -24,6 +26,14 @@ export const UserRegister = async (registerInfo: IUserRegisterRequest) => {
     true,
     registerInfo
   );
+
+  return resp;
+};
+
+export const GetUserItems = async () => {
+  let session = await GetSession();
+
+  const resp = await Get<IUserItems[]>(`api/users/items/${session.userUuid}`);
 
   return resp;
 };

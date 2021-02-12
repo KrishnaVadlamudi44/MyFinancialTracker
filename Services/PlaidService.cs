@@ -172,6 +172,23 @@ namespace MyFinancialTracker.Services
 
         }
 
+        public async Task<Acklann.Plaid.Entity.Item> GetItem(string accessToken)
+        {
+            var item = await _plaidClient.FetchItemAsync(new GetItemRequest()
+            {
+                AccessToken = accessToken
+            });
+
+            if (item.IsSuccessStatusCode)
+            {
+                return item.Item;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<List<Account>> GetAccountsForUser(Guid userguid)
         {
             var itemsForUser = _dbContext.Items.Where(x=>x.UserGuid == userguid);

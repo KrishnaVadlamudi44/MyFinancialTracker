@@ -3,6 +3,7 @@ using MyFinancialTracker.Data;
 using MyFinancialTracker.Data.Entities;
 using MyFinancialTracker.Models;
 using MyFinancialTracker.Models.ApiRequestModels;
+using MyFinancialTracker.Models.ApiResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace MyFinancialTracker.Services
         Guid Create(RegisterRequestModel user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
+        List<Item> GetItemsForUser(Guid userGuid);
     }
     public class UserService: IUserService
     {
@@ -128,6 +130,11 @@ namespace MyFinancialTracker.Services
                 _dbContext.Users.Remove(user);
                 _dbContext.SaveChanges();
             }
+        }
+
+        public List<Item> GetItemsForUser(Guid userGuid)
+        {
+           return _dbContext.Items.Where(x => x.UserGuid == userGuid).ToList();
         }
 
         #region helper methods

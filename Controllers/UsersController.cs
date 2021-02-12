@@ -25,12 +25,14 @@ namespace MyFinancialTracker.Controllers
     {
         private IUserService _userService;
         private ISessionService _sessionService;
+        private IPlaidService _plaidService;
         private ILogger _logger;
         private readonly AppSettings _appSettings;
-        public UsersController(IUserService userService, ISessionService sessionService, ILogger logger, IOptions<AppSettings> appSettings)
+        public UsersController(IUserService userService, ISessionService sessionService, IPlaidService plaidService, ILogger logger, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _sessionService = sessionService;
+            _plaidService = plaidService;
             _logger = logger;
             _appSettings = appSettings.Value;
         }
@@ -87,6 +89,37 @@ namespace MyFinancialTracker.Controllers
                 SessionGuid = sessionGuid.ToString(),
                 TokenString = tokenString
             });
+        }
+
+        [HttpGet]
+        [Route("items/{userGuid}")]
+        public IActionResult GetItems(string userGuid)
+        {
+            var itemsList = new List<ItemListResponseModel>();
+            var itemsForUser = _userService.GetItemsForUser(new Guid(userGuid));
+
+            foreach (var item in itemsForUser)
+            {
+                var institutionInfo = _plaidService.GetInstitutionById(item.InstitutionId);
+
+                if (institutionInfo.Result.IsSuccessStatusCode)
+                {
+                    itemsList.Add(new ItemListResponseModel()
+                    {
+                        InstitutionId = institutionInfo.Result.Institution.Id,
+                        InstitutionName = institutionInfo.Result.Institution.Name
+                    });
+                }
+            }
+
+            if(itemsList.Count > 0)
+            {
+                return Ok(itemsList);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         //[HttpGet]

@@ -18,3 +18,8 @@ export interface IUserRegisterRequest {
 export interface IUserRegisterResponse {
   createdUserGuid: string;
 }
+
+export interface IUserItems {
+  institutionId: string;
+  institutionName: string;
+}

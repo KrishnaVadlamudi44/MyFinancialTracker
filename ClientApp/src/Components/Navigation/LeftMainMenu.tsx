@@ -10,6 +10,7 @@ import { useStyles } from '../../MuiStyles';
 import { useHistory } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useAppContextState } from '../../Context/AppContext';
@@ -35,6 +36,10 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
         history.push('Accounts');
         setSelected(item);
         break;
+      case 'Items':
+        history.push('Items');
+        setSelected(item);
+        break;
       case 'Profile':
         history.push('Profile');
         setSelected(item);
@@ -57,7 +62,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
   return (
     <div className={classes.drawerContainer}>
       <List>
-        {['Dashboard', 'Accounts'].map((text, index) => (
+        {['Dashboard', 'Accounts', 'Items'].map((text, index) => (
           <ListItem
             button
             key={text}
@@ -69,6 +74,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
             <ListItemIcon>
               {text === 'Dashboard' && <DashboardIcon />}
               {text === 'Accounts' && <AccountBalanceIcon />}
+              {text === 'Items' && <ListAltIcon />}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
