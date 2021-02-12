@@ -31,5 +31,9 @@ export const GetAccounts = async () => {
     `api/plaid/getAccounts/${session.userUuid}`
   );
 
-  return result;
+  if (Object.keys(result).length > 0) {
+    return result;
+  } else {
+    return null;
+  }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetAccounts, GetLinkToken } from '../Api/PlaidApi';
 import { useAppContextState } from '../Context/AppContext';
 import LinkBankAccount from './LinkBankAccount';
@@ -14,14 +14,19 @@ const Accounts = () => {
 
   const GetAccountsForUser = async () => {
     let accounts = await GetAccounts();
-    dispatch({ type: 'updateUserAccounts', nextState: accounts });
+    if (accounts) {
+      dispatch({ type: 'updateUserAccounts', nextState: accounts });
+    }
   };
+
+  useEffect(() => {
+    GetAccountsForUser();
+  }, []);
 
   return (
     <div>
       Accounts page
       <button onClick={createTokenAndOpenPlaid}>addAccountOnClick</button>
-      <button onClick={GetAccountsForUser}>get accounts for User</button>
       {appContextState.userAccounts &&
         appContextState.userAccounts.map((account) => {
           return (

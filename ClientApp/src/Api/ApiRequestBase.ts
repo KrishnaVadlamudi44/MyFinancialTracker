@@ -17,7 +17,12 @@ export const Get = async <T>(
       method: 'GET',
       headers: requestHeaders,
     });
-    return response.json();
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      return {} as T;
+    }
   } catch {
     return {} as T;
   }
@@ -40,7 +45,12 @@ export const Post = async <R, T>(
       headers: requestHeaders,
       body: JSON.stringify(payload),
     });
-    return response.json();
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      return {} as R;
+    }
   } catch {
     return {} as R;
   }
