@@ -4,7 +4,7 @@ export interface IUserLoginRequest {
 }
 
 export interface IUserLoginResponse {
-  userGuid: string;
+  sessionGuid: string;
   tokenString: string;
 }
 

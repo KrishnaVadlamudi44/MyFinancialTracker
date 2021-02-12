@@ -1,4 +1,5 @@
 import React, { useContext, useReducer } from 'react';
+import { IPlaidAccount } from '../Models/PlaidModels/PlaidAccount';
 import { AppContextActions } from './Actions';
 import { reducer } from './Reducer';
 
@@ -6,6 +7,8 @@ export type AppContextState = {
   authenticated: boolean;
   userGuid?: string | undefined;
   sessionId?: string | undefined;
+  linkToken?: string | undefined;
+  userAccounts?: IPlaidAccount[] | undefined;
   loading: boolean;
 };
 

@@ -1,27 +1,29 @@
 import React, { useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import { CreateItem } from '../Api/PlaidApi';
+import { useAppContextState } from '../Context/AppContext';
 
-const LinkBankAccount = () => {
-  const onSuccess = useCallback((token, metadata) => {
-    console.log({ token: token, metadata: metadata });
+interface ILinkBankAccount {
+  token: string;
+}
+
+const LinkBankAccount = ({ token }: ILinkBankAccount) => {
+  const { appContextState, dispatch } = useAppContextState();
+
+  const onSuccess = useCallback((token: string, metadata) => {
+    CreateItem(token);
+    dispatch({ type: 'setLinkToken', nextState: undefined });
   }, []);
 
-  const GetLinkToken = () => {
-    return 'Get link token from server';
-  };
-
-  const config = {
-    token: GetLinkToken(),
+  const { open, ready, error } = usePlaidLink({
+    token: token,
     onSuccess: onSuccess,
-  };
+    onExit: () => dispatch({ type: 'setLinkToken', nextState: undefined }),
+  });
 
-  const { open, ready, error } = usePlaidLink(config);
+  open();
 
-  return (
-    <button onClick={() => open()} disabled={!ready}>
-      Add Account
-    </button>
-  );
+  return <div></div>;
 };
 
 export default LinkBankAccount;

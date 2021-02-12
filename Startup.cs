@@ -88,6 +88,7 @@ namespace MyFinancialTracker
             services.AddSingleton<ILogger, Logger<Startup>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<IPlaidService, PlaidService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,9 +9,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { UserLogin, UserRegister } from '../Api/UserApi';
-import { AppContextState, useAppContextState } from '../Context/AppContext';
+import { useAppContextState } from '../Context/AppContext';
 import {
   IUserLoginRequest,
   IUserRegisterRequest,
@@ -47,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Login = () => {
   const classes = useStyles();
-  const history = useHistory();
   const [localState, setLocalState] = useState<ILoginInterface>({
     loginOrRegister: 'login',
     firstName: '',
@@ -76,13 +74,11 @@ const Login = () => {
     if (localState.loginOrRegister === 'login') {
       var userInfo = await UserLogin(localState as IUserLoginRequest);
       if (userInfo.tokenString) {
-        localStorage.setItem('token', userInfo.tokenString);
         dispatch({
           type: 'updateAppState',
           nextState: {
             ...appContextState,
             authenticated: true,
-            userGuid: userInfo.userGuid,
           },
         });
       }
