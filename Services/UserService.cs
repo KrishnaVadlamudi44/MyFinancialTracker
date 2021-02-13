@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MyFinancialTracker.Data;
 using MyFinancialTracker.Data.Entities;
 using MyFinancialTracker.Models;
@@ -18,15 +19,18 @@ namespace MyFinancialTracker.Services
         Guid Create(RegisterRequestModel user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
-        List<Item> GetItemsForUser(Guid userGuid);
+        List<Item> GetItemsForUser();
+        void RemoveItemForUser(string institutionId);
     }
     public class UserService: IUserService
     {
         private MyFinancialTrackerDbContext _dbContext;
+        private IHttpContextAccessor _httpContextAccessor;
         private IMapper _mapper;
-        public UserService(MyFinancialTrackerDbContext dbContext, IMapper mapper)
+        public UserService(MyFinancialTrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -132,10 +136,22 @@ namespace MyFinancialTracker.Services
             }
         }
 
-        public List<Item> GetItemsForUser(Guid userGuid)
+        public List<Item> GetItemsForUser()
         {
-           return _dbContext.Items.Where(x => x.UserGuid == userGuid).ToList();
+            var currentUserGuid = _httpContextAccessor.HttpContext.User.Identity.Name;
+            return _dbContext.Items.Where(x => x.UserGuid == new Guid(currentUserGuid)).ToList();
         }
+
+        public void RemoveItemForUser(string institutionId)
+        {
+            var currentUserGuid = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var itemToBeDeleted = _dbContext.Items.Where(x => x.UserGuid == new Guid(currentUserGuid) && x.InstitutionId == institutionId).FirstOrDefault();
+            _dbContext.Items.Remove(itemToBeDeleted);
+
+            _dbContext.SaveChanges();
+        }
+
+
 
         #region helper methods
 

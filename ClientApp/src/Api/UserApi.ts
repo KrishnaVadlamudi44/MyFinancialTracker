@@ -5,8 +5,7 @@ import {
   IUserRegisterRequest,
   IUserRegisterResponse,
 } from '../Models/UserModels/User';
-import { Get, Post } from './ApiRequestBase';
-import { GetSession } from './SessionApi';
+import { Delete, Get, Post } from './ApiRequestBase';
 
 export const UserLogin = async (loginInfo: IUserLoginRequest) => {
   const resp = await Post<IUserLoginResponse, IUserLoginRequest>(
@@ -31,9 +30,13 @@ export const UserRegister = async (registerInfo: IUserRegisterRequest) => {
 };
 
 export const GetUserItems = async () => {
-  let session = await GetSession();
+  const resp = await Get<IUserItems[]>(`api/users/items`);
 
-  const resp = await Get<IUserItems[]>(`api/users/items/${session.userUuid}`);
+  return resp;
+};
+
+export const RemoveUserItem = async (institutionId: string) => {
+  const resp = await Delete(`api/users/items/${institutionId}`, true);
 
   return resp;
 };

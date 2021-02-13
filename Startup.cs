@@ -32,6 +32,7 @@ namespace MyFinancialTracker
             services.AddLogging();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors();
+            services.AddHttpContextAccessor();
 
             services.AddEntityFrameworkNpgsql().AddDbContext<MyFinancialTrackerDbContext>();
 
@@ -62,7 +63,7 @@ namespace MyFinancialTracker
                         }
 
                         return Task.CompletedTask;
-                    }
+                    }                    
                     
                 };
                 x.TokenValidationParameters = new TokenValidationParameters

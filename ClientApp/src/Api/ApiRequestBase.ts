@@ -56,6 +56,32 @@ export const Post = async <R, T>(
   }
 };
 
+export const Delete = async (
+  endPoint: string,
+  authorizedCall: boolean = true
+): Promise<boolean> => {
+  try {
+    let requestHeaders = getDefaultHeaders();
+    authorizedCall &&
+      requestHeaders.append(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token')}`
+      );
+    const response = await fetch(endPoint, {
+      method: 'DELETE',
+      headers: requestHeaders,
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch {
+    return false;
+  }
+};
+
 const getDefaultHeaders = () => {
   return new Headers({
     'Content-Type': 'application/json;charset=UTF-8',

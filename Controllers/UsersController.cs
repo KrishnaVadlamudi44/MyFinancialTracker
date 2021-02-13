@@ -92,11 +92,11 @@ namespace MyFinancialTracker.Controllers
         }
 
         [HttpGet]
-        [Route("items/{userGuid}")]
-        public IActionResult GetItems(string userGuid)
+        [Route("items")]
+        public IActionResult GetItems()
         {
             var itemsList = new List<ItemListResponseModel>();
-            var itemsForUser = _userService.GetItemsForUser(new Guid(userGuid));
+            var itemsForUser = _userService.GetItemsForUser();
 
             foreach (var item in itemsForUser)
             {
@@ -120,6 +120,15 @@ namespace MyFinancialTracker.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpDelete]
+        [Route("items/{institutionId}")]
+        public IActionResult RemoveItem(string institutionId)
+        {
+            _userService.RemoveItemForUser(institutionId);
+
+            return Ok();
         }
 
         //[HttpGet]
