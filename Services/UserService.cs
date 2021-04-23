@@ -37,8 +37,8 @@ namespace MyFinancialTracker.Services
         public Guid Create(RegisterRequestModel registerModel, string password)
         {
             // map model to entity
-            var user = _mapper.Map<RegisterRequestModel, User>(registerModel);
-            var userInfo = _mapper.Map<RegisterRequestModel, UserInfo>(registerModel);
+            var user = _mapper.Map<User>(registerModel);
+            var userInfo = _mapper.Map<UserInfo>(registerModel);
 
             // validation
             if (string.IsNullOrWhiteSpace(password))
@@ -60,7 +60,7 @@ namespace MyFinancialTracker.Services
 
             userInfo.UserGuid = createdUserId;
 
-            _dbContext.UsersInfo.Add(userInfo);
+            _dbContext.UserInfos.Add(userInfo);
             _dbContext.SaveChanges();
 
             return createdUserId;
@@ -68,18 +68,20 @@ namespace MyFinancialTracker.Services
 
         public User Authenticate(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException(username);
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentNullException(password);
 
             var user = _dbContext.Users.SingleOrDefault(x => x.UserName == username);
 
             // check if username exists
             if (user == null)
-                return null;
+                throw new Exception("User doesn't Exist!");
 
             // check if password is correct
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
+                throw new Exception("Password is wrong!");
 
             // authentication successful
             return user;

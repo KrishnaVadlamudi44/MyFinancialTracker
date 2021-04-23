@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyFinancialTracker.Data.Entities;
+using MyFinancialTracker.Helpers;
 using MyFinancialTracker.Models;
 using MyFinancialTracker.Models.ApiRequestModels;
 using MyFinancialTracker.Models.ApiResponseModels;
@@ -61,34 +62,25 @@ namespace MyFinancialTracker.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] LoginRequestModel model)
         {
-            var user = _userService.Authenticate(model.UserName, model.Password);
-
-            if (user == null)
+            try
             {
-                return BadRequest(new { message = "username or password is incorrect" });
-            }
+                var user = _userService.Authenticate(model.UserName, model.Password);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                var session = _sessionService.CreateSession(user.UserGuid);
+
+                var tokenString = JwtTokenHandler.CreateJwtToken(user.UserGuid, session.Expiry, _appSettings.Secret);
+
+                return Ok(new LoginResponseModel()
                 {
-                    new Claim(ClaimTypes.Name, user.UserGuid.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            var sessionGuid = _sessionService.CreateSession(user.UserGuid);
-
-            return Ok(new LoginResponseModel()
+                    SessionGuid = session.SessionUuid.ToString(),
+                    TokenString = tokenString,
+                    SessionExpiry = session.Expiry
+                });
+            }
+            catch (Exception ex)
             {
-                SessionGuid = sessionGuid.ToString(),
-                TokenString = tokenString
-            });
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
@@ -96,7 +88,7 @@ namespace MyFinancialTracker.Controllers
         public IActionResult GetItems()
         {
             var itemsList = new List<ItemListResponseModel>();
-            var itemsForUser = _userService.GetItemsForUser();
+            var itemsForUser = _userService.GetItemsForUser();    
 
             foreach (var item in itemsForUser)
             {
@@ -131,48 +123,5 @@ namespace MyFinancialTracker.Controllers
             return Ok();
         }
 
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var users = _userService.GetAll();
-        //    var model = _mapper.Map<IList<UserModel>>(users);
-        //    return Ok(model);
-        //}
-
-        //[HttpGet("{id}")]
-        //public IActionResult GetById(int id)
-        //{
-        //    var user = _userService.GetById(id);
-        //    var model = _mapper.Map<UserModel>(user);
-        //    return Ok(model);
-        //}
-
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, [FromBody] UpdateModel model)
-        //{
-        //    _ = _userService.GetById(id);
-        //    // map model to entity and set id
-        //    User user = _mapper.Map<User>(model);
-
-
-        //    try
-        //    {
-        //        // update user 
-        //        _userService.Update(user, model.Password);
-        //        return Ok();
-        //    }
-        //    catch (AppException ex)
-        //    {
-        //        // return error message if there was an exception
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
-
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    _userService.Delete(id);
-        //    return Ok();
-        //}
     }
 }

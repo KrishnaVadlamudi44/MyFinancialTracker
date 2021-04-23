@@ -9,5 +9,6 @@ namespace MyFinancialTracker.Models.ApiResponseModels
     {
         public string SessionGuid { get; set; }
         public string TokenString { get; set; }
+        public DateTime SessionExpiry { get; set; }
     }
 }

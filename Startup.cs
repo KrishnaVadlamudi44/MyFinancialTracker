@@ -63,8 +63,7 @@ namespace MyFinancialTracker
                         }
 
                         return Task.CompletedTask;
-                    }                    
-                    
+                    }
                 };
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -93,7 +92,7 @@ namespace MyFinancialTracker
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MyFinancialTrackerDbContext myFinancialTrackerDbContext )
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MyFinancialTrackerDbContext myFinancialTrackerDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -110,7 +109,7 @@ namespace MyFinancialTracker
             myFinancialTrackerDbContext.Database.Migrate();
 
             app.UseHttpsRedirection();
-            
+
 
             app.UseRouting();
 

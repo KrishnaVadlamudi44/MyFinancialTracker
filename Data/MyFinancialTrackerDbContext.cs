@@ -36,7 +36,7 @@ namespace MyFinancialTracker.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }
-        public DbSet<UserInfo> UsersInfo { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Item> Items { get; set; }
 
     }
