@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Accounts from './Accounts';
-import Dashboard from './Dashboard';
-import Items from './Items';
+import Accounts from '../NavigationItems/Accounts';
+import Dashboard from '../NavigationItems/Dashboard';
+import Items from '../NavigationItems/Items';
 
 const MainContent = () => {
   return (

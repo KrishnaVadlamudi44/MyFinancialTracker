@@ -11,21 +11,15 @@ import {
   withStyles,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { GetAccounts, GetLinkToken } from '../Api/PlaidApi';
-import { useAppContextState } from '../Context/AppContext';
-import { useStyles } from '../MuiStyles';
+import { GetAccounts, GetLinkToken } from '../../Api/PlaidApi';
+import { useAppContextState } from '../../Context/AppContext';
+import { useStyles } from '../../MuiStyles';
 import LinkBankAccount from './LinkBankAccount';
 
 const Accounts = () => {
   const { appContextState, dispatch } = useAppContextState();
 
   let classes = useStyles();
-
-  const createTokenAndOpenPlaid = () => {
-    GetLinkToken().then((token) => {
-      dispatch({ type: 'setLinkToken', nextState: token });
-    });
-  };
 
   const GetAccountsForUser = async () => {
     let accounts = await GetAccounts();
@@ -41,7 +35,6 @@ const Accounts = () => {
   return (
     <div>
       Accounts page
-      <button onClick={createTokenAndOpenPlaid}>addAccountOnClick</button>
       <div>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label='customized table'>

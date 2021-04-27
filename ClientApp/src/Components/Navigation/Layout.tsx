@@ -10,7 +10,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
 import { useStyles } from '../../MuiStyles';
-import MainContent from '../MainContent';
+import MainContent from './MainContent';
 import LeftMainMenu from './LeftMainMenu';
 
 const Layout = () => {
@@ -31,8 +31,7 @@ const Layout = () => {
               className={classes.menuButton}
               onClick={toggleDrawerOpen}
               color='inherit'
-              aria-label='menu'
-            >
+              aria-label='menu'>
               <MenuIcon />
             </IconButton>
           </Hidden>
@@ -47,8 +46,7 @@ const Layout = () => {
           variant='permanent'
           classes={{
             paper: classes.drawerPaper,
-          }}
-        >
+          }}>
           <div>
             <Toolbar />
             <LeftMainMenu />
@@ -64,8 +62,7 @@ const Layout = () => {
           onClose={toggleDrawerOpen}
           classes={{
             paper: classes.drawerPaper,
-          }}
-        >
+          }}>
           <div>
             <Toolbar />
             <LeftMainMenu onSelect={toggleDrawerOpen} />
@@ -79,17 +76,5 @@ const Layout = () => {
     </div>
   );
 };
-
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//   },
-//   title: {
-//     flexGrow: 1,
-//   },
-// }));
 
 export default Layout;

@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { UserLogin, UserRegister } from '../Api/UserApi';
-import { useAppContextState } from '../Context/AppContext';
 import {
   IUserLoginRequest,
   IUserRegisterRequest,
@@ -18,13 +17,11 @@ import {
 import ButtonInput from './InputComponents/ButtonInput';
 import TextInput from './InputComponents/TextInput';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { useAppDispatch } from '../Store/StoreHooks';
+import { loginAsync } from '../Store/Slices/UserSlice';
 
-interface ILoginInterface {
+interface ILoginInterface extends IUserLoginRequest, IUserRegisterRequest {
   loginOrRegister: 'login' | 'register';
-  firstName: string;
-  lastName: string;
-  userName: string;
-  password: string;
   loading: boolean;
 }
 
@@ -54,7 +51,8 @@ const Login = () => {
     password: '',
     loading: false,
   });
-  const { appContextState, dispatch } = useAppContextState();
+
+  const dispatch = useAppDispatch();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,19 +70,21 @@ const Login = () => {
       loading: true,
     }));
     if (localState.loginOrRegister === 'login') {
-      var userInfo = await UserLogin(localState as IUserLoginRequest);
-      if (userInfo.tokenString) {
-        dispatch({
-          type: 'updateAppState',
-          nextState: {
-            ...appContextState,
-            authenticated: true,
-          },
-        });
-      }
+      dispatch(loginAsync(localState as IUserLoginRequest));
+
+      // var userInfo = await UserLogin(localState as IUserLoginRequest);
+      // if (userInfo) {
+      //   dispatch({
+      //     type: 'updateAppState',
+      //     nextState: {
+      //       ...appContextState,
+      //       authenticated: true,
+      //     },
+      //   });
+      // }
     } else {
       var userRegister = await UserRegister(localState as IUserRegisterRequest);
-      if (userRegister.createdUserGuid) {
+      if (userRegister) {
         setLocalState((prevState) => ({
           ...prevState,
           loginOrRegister: 'login',
@@ -110,7 +110,7 @@ const Login = () => {
           <>
             <TextInput
               name='firstName'
-              value={localState.firstName}
+              value={localState.firstName!}
               onChange={handleChange}
               required={true}
               fullwidth={true}
@@ -177,8 +177,7 @@ const Login = () => {
                 }));
               }}
               href='#'
-              variant='body2'
-            >
+              variant='body2'>
               {localState.loginOrRegister === 'login'
                 ? "Don't have an account? Sign Up"
                 : 'Already have an account? Sign in'}

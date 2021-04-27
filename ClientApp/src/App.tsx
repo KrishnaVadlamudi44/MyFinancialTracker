@@ -4,14 +4,18 @@ import Layout from './Components/Navigation/Layout';
 import { useStyles } from './MuiStyles';
 import { BrowserRouter } from 'react-router-dom';
 import Login from './Components/Login';
-import { useAppContextState } from './Context/AppContext';
+import { useAppSelector } from './Store/StoreHooks';
+import { IUser } from './Models/UserModels/User';
+import { RootState } from './Store/ConfigureStore';
 
 const App: React.FC = () => {
   const classes = useStyles();
-  const { appContextState, dispatch } = useAppContextState();
+
+  const user = useAppSelector<IUser>((state: RootState) => state.user);
+
   return (
     <div>
-      {appContextState.authenticated ? (
+      {user && user.isAuthenticated ? (
         <div className={classes.root}>
           <BrowserRouter>
             <Grid container>

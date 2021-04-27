@@ -1,18 +1,19 @@
 import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import App from './App';
-import { AppContextProvider } from './Context/AppContext';
 import { muiTheme } from './MuiStyles';
 import reportWebVitals from './reportWebVitals';
+import { store } from './Store/ConfigureStore';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppContextProvider>
+    <Provider store={store}>
       <ThemeProvider theme={muiTheme}>
         <App />
       </ThemeProvider>
-    </AppContextProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

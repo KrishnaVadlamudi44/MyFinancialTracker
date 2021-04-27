@@ -6,6 +6,7 @@ export interface IUserLoginRequest {
 export interface IUserLoginResponse {
   sessionGuid: string;
   tokenString: string;
+  sessionExpiry: Date;
 }
 
 export interface IUserRegisterRequest {
@@ -22,4 +23,10 @@ export interface IUserRegisterResponse {
 export interface IUserItems {
   institutionId: string;
   institutionName: string;
+}
+
+export interface IUser {
+  isAuthenticated: boolean;
+  firstName: string;
+  lastname: string;
 }
