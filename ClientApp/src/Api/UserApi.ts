@@ -13,8 +13,6 @@ export const UserLogin = async (loginInfo: IUserLoginRequest) => {
     true,
     loginInfo
   );
-  localStorage.setItem('token', resp.tokenString);
-  localStorage.setItem('sessionId', resp.sessionGuid);
 
   return resp;
 };

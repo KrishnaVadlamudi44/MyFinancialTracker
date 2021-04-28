@@ -1,3 +1,5 @@
+import { IPlaidAccount } from '../PlaidModels/PlaidAccount';
+
 export interface IUserLoginRequest {
   userName: string;
   password: string;
@@ -29,4 +31,5 @@ export interface IUser {
   isAuthenticated: boolean;
   firstName: string;
   lastname: string;
+  accounts: IPlaidAccount[];
 }

@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Button,
   Drawer,
   Hidden,
   IconButton,

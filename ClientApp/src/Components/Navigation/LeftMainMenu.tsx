@@ -13,7 +13,8 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { useAppContextState } from '../../Context/AppContext';
+import { useAppDispatch } from '../../Store/StoreHooks';
+import * as userActions from '../../Store/Slices/UserSlice';
 
 interface ILeftMainMenuProps {
   onSelect?: () => void | undefined;
@@ -23,7 +24,8 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
   const classes = useStyles();
   const history = useHistory();
   const [selected, setSelected] = useState<string>();
-  const { appContextState, dispatch } = useAppContextState();
+
+  const dispatch = useAppDispatch();
 
   const handleClick = (item: string) => {
     switch (item) {
@@ -45,14 +47,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
         setSelected(item);
         break;
       case 'Logout':
-        localStorage.removeItem('token');
-        localStorage.removeItem('sessionId');
-        localStorage.removeItem('sessionExpiry');
-
-        dispatch({
-          type: 'updateAppState',
-          nextState: { ...appContextState, authenticated: false },
-        });
+        dispatch(userActions.userLogout());
         break;
 
       default:
@@ -70,8 +65,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
             onClick={() => {
               handleClick(text);
             }}
-            selected={history.location.pathname.includes(text)}
-          >
+            selected={history.location.pathname.includes(text)}>
             <ListItemIcon>
               {text === 'Dashboard' && <DashboardIcon />}
               {text === 'Accounts' && <AccountBalanceIcon />}
@@ -90,8 +84,7 @@ const LeftMainMenu: React.FC<ILeftMainMenuProps> = ({ onSelect }) => {
             onClick={() => {
               handleClick(text);
             }}
-            selected={history.location.pathname.includes(text)}
-          >
+            selected={history.location.pathname.includes(text)}>
             <ListItemIcon>
               {text === 'Profile' && <AccountCircleIcon />}
               {text === 'Logout' && <ExitToAppIcon />}

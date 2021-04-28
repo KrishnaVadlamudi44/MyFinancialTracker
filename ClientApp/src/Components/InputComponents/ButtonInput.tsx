@@ -1,7 +1,7 @@
 import { makeStyles, Theme, CircularProgress } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { green } from '@material-ui/core/colors';
-import React, { ElementType } from 'react';
+import React from 'react';
 
 interface IButtonInput {
   onClick(
@@ -38,8 +38,7 @@ const ButtonInput = ({
         color={color}
         className={className}
         onClick={onClick}
-        disabled={disabled || loading}
-      >
+        disabled={disabled || loading}>
         {label}
       </Button>
       {loading && (

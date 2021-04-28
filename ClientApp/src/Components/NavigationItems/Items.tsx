@@ -8,22 +8,25 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GetUserItems, RemoveUserItem } from '../../Api/UserApi';
 import { IUserItems } from '../../Models/UserModels/User';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { GetLinkToken } from '../../Api/PlaidApi';
-import { useAppContextState } from '../../Context/AppContext';
+import { CreateItem, GetLinkToken } from '../../Api/PlaidApi';
+import { usePlaidLink } from 'react-plaid-link';
 
-const Items = () => {
+const Items: React.FC = () => {
   const [userItems, setuserItems] = useState<IUserItems[]>();
-  const { appContextState, dispatch } = useAppContextState();
+  const [token, setToken] = useState<string>('');
+
+  const onSuccess = useCallback((token: string, metadata) => {
+    CreateItem(token);
+    LoadUserItems();
+  }, []);
 
   const createTokenAndOpenPlaid = () => {
-    GetLinkToken().then((token) => {
-      dispatch({ type: 'setLinkToken', nextState: token });
-    });
+    open();
   };
 
   const LoadUserItems = async () => {
@@ -36,9 +39,21 @@ const Items = () => {
     resp && LoadUserItems();
   };
 
+  const { open } = usePlaidLink({
+    token: token,
+    onSuccess: onSuccess,
+    onExit: LoadUserItems,
+  });
+
   useEffect(() => {
+    if (token === '') {
+      GetLinkToken().then((data) => {
+        setToken(data);
+      });
+    }
     LoadUserItems();
   }, []);
+
   return (
     <div>
       <button onClick={createTokenAndOpenPlaid}>addAccountOnClick</button>
@@ -48,7 +63,7 @@ const Items = () => {
             userItems.length > 0 &&
             userItems.map((item) => {
               return (
-                <ListItem>
+                <ListItem key={item.institutionId}>
                   <ListItemAvatar>
                     <Avatar>
                       <AccountBalanceIcon />

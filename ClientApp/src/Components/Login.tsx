@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { UserLogin, UserRegister } from '../Api/UserApi';
+import { UserRegister } from '../Api/UserApi';
 import {
   IUserLoginRequest,
   IUserRegisterRequest,
@@ -71,17 +71,6 @@ const Login = () => {
     }));
     if (localState.loginOrRegister === 'login') {
       dispatch(loginAsync(localState as IUserLoginRequest));
-
-      // var userInfo = await UserLogin(localState as IUserLoginRequest);
-      // if (userInfo) {
-      //   dispatch({
-      //     type: 'updateAppState',
-      //     nextState: {
-      //       ...appContextState,
-      //       authenticated: true,
-      //     },
-      //   });
-      // }
     } else {
       var userRegister = await UserRegister(localState as IUserRegisterRequest);
       if (userRegister) {

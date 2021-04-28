@@ -1,8 +1,10 @@
+import { httpResponseCodes } from '../Models/ApiHelperModels/HttpResponse';
+
 export const Get = async <T>(
   endPoint: string,
   authorizedCall: boolean = true,
   queryParameters?: string
-): Promise<T> => {
+): Promise<T | null> => {
   try {
     let requestHeaders = getDefaultHeaders();
 
@@ -21,10 +23,10 @@ export const Get = async <T>(
     if (response.ok) {
       return response.json();
     } else {
-      return {} as T;
+      return null;
     }
   } catch {
-    return {} as T;
+    return null;
   }
 };
 
@@ -32,7 +34,7 @@ export const Post = async <R, T>(
   endPoint: string,
   authorizedCall: boolean = true,
   payload: T
-): Promise<R> => {
+): Promise<R | null> => {
   try {
     let requestHeaders = getDefaultHeaders();
     authorizedCall &&
@@ -46,13 +48,13 @@ export const Post = async <R, T>(
       body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
+    if (response.ok && response.status === httpResponseCodes.success) {
       return response.json();
     } else {
-      return {} as R;
+      return null;
     }
   } catch {
-    return {} as R;
+    return null;
   }
 };
 
@@ -87,13 +89,4 @@ const getDefaultHeaders = () => {
     'Content-Type': 'application/json;charset=UTF-8',
     Accept: 'application/json, text/plain',
   });
-};
-
-const getCookie = (name: string) => {
-  const value = '; ' + document.cookie;
-  const parts = value.split('; ' + name + '=');
-
-  if (parts.length === 2) {
-    return parts.pop()!.split(';').shift();
-  }
 };

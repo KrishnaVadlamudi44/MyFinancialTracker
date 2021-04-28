@@ -10,22 +10,19 @@ import {
   Theme,
   withStyles,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { GetAccounts, GetLinkToken } from '../../Api/PlaidApi';
-import { useAppContextState } from '../../Context/AppContext';
+import React, { useEffect } from 'react';
 import { useStyles } from '../../MuiStyles';
-import LinkBankAccount from './LinkBankAccount';
+import { getAccountsAsync } from '../../Store/Slices/UserSlice';
+import { useAppDispatch, useAppSelector } from '../../Store/StoreHooks';
 
-const Accounts = () => {
-  const { appContextState, dispatch } = useAppContextState();
-
+const Accounts: React.FC = () => {
   let classes = useStyles();
 
+  const userDetails = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
   const GetAccountsForUser = async () => {
-    let accounts = await GetAccounts();
-    if (accounts) {
-      dispatch({ type: 'updateUserAccounts', nextState: accounts });
-    }
+    dispatch(getAccountsAsync());
   };
 
   useEffect(() => {
@@ -48,8 +45,8 @@ const Accounts = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {appContextState.userAccounts &&
-                appContextState.userAccounts.map((account) => {
+              {userDetails.accounts &&
+                userDetails.accounts.map((account) => {
                   return (
                     <StyledTableRow key={account.id}>
                       <StyledTableCell component='th' scope='row'>
@@ -74,9 +71,6 @@ const Accounts = () => {
           </Table>
         </TableContainer>
       </div>
-      {appContextState.linkToken && (
-        <LinkBankAccount token={appContextState.linkToken} />
-      )}
     </div>
   );
 };
